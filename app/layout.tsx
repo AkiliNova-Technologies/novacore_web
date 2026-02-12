@@ -6,12 +6,12 @@ export const metadata: Metadata = {
     "NovaCore Consulting | Business Strategy, Operations & Digital Transformation",
   description:
     "NovaCore Consulting helps African businesses scale through strategy, operational excellence, and digital transformation. Practical execution. Measurable results.",
-  authors: [{ name: "NovaCore Consulting" }],
+  authors: [{ name: "AkiliNova Technologies" }],
   openGraph: {
     title: "Business & Digital Transformation Consulting | NovaCore",
     description:
       "We help organizations clarify strategy, optimize operations, and execute digital transformation across Africa.",
-    url: "https://novacoreconsulting.com",
+    url: "https://novacore-agency.netlify.app",
     siteName: "NovaCore Consulting",
     images: [
       {
