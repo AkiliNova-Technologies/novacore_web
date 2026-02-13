@@ -1,23 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobile(window.innerWidth < 640);
+      setIsTablet(window.innerWidth >= 640 && window.innerWidth < 1024);
+    };
+    
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Newsletter subscription:", email);
     setEmail("");
+    
+    // Optional: Show success message on mobile
+    if (isMobile) {
+      alert("Thank you for subscribing!");
+    }
   };
 
   return (
-    <section className="relative bg-white py-16 lg:py-20 overflow-hidden">
-      {/* Dotted Pattern Background */}
-      <div className="absolute inset-0 dotted-pattern opacity-30" />
+    <section className="relative bg-white py-12 sm:py-16 lg:py-20 overflow-hidden">
+      {/* Dotted Pattern Background - Preserved */}
+      <div className="absolute inset-0 dotted-pattern opacity-30 pointer-events-none" />
 
-      {/* Decorative Element - Left (Abstract geometric/chart icon) */}
+      {/* Decorative Element - Left - Hidden on mobile/tablet, preserved on desktop */}
       <div className="hidden lg:block absolute left-0 top-0">
         <svg
           width="120"
@@ -39,7 +57,7 @@ export default function Newsletter() {
         </svg>
       </div>
 
-      {/* Decorative Element - Right (Abstract rising bars/growth chart) */}
+      {/* Decorative Element - Right - Hidden on mobile/tablet, preserved on desktop */}
       <div className="hidden lg:block absolute right-0 bottom-0">
         <svg
           width="320"
@@ -79,7 +97,7 @@ export default function Newsletter() {
         </svg>
       </div>
 
-      {/* Additional floating decorative elements */}
+      {/* Additional floating decorative elements - Desktop only */}
       <div className="hidden lg:block absolute left-20 bottom-10">
         <div className="text-orange-500 opacity-60">
           <span className="text-2xl">✦</span>
@@ -91,47 +109,78 @@ export default function Newsletter() {
         </div>
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Section Label */}
-        <div className="flex items-center justify-center gap-3 text-navy/70 text-sm font-medium tracking-wide mb-4">
-          <span className="w-8 h-0.5 bg-orange-500" />
+      {/* Mobile decorative elements - Subtle, preserves theme */}
+      {isMobile && (
+        <>
+          <div className="absolute left-0 top-1/3 w-16 h-16 bg-orange-500/5 rounded-full blur-2xl -z-10" />
+          <div className="absolute right-0 bottom-1/3 w-20 h-20 bg-navy/5 rounded-full blur-2xl -z-10" />
+          <div className="absolute left-4 bottom-4 text-orange-500/10 text-4xl">✦</div>
+          <div className="absolute right-8 top-8 text-navy/10 text-3xl">✦</div>
+        </>
+      )}
+
+      {/* Tablet decorative elements - Simplified */}
+      {isTablet && (
+        <>
+          <div className="absolute left-0 top-1/2 w-24 h-24 bg-orange-500/5 rounded-full blur-2xl -z-10" />
+          <div className="absolute right-0 bottom-1/4 w-32 h-32 bg-navy/5 rounded-full blur-2xl -z-10" />
+        </>
+      )}
+
+      <div className="relative w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Section Label - Responsive */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 text-navy/70 text-xs sm:text-sm font-medium tracking-wide mb-3 sm:mb-4">
+          <span className="w-6 sm:w-8 h-0.5 bg-orange-500" />
           Our Newsletter
-          <span className="w-8 h-0.5 bg-orange-500" />
+          <span className="w-6 sm:w-8 h-0.5 bg-orange-500" />
         </div>
 
-        {/* Heading */}
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8">
-          <span className="text-navy">Join Our Newsletter for</span>{" "}
-          <span className="text-orange-500 italic">
+        {/* Heading - Responsive typography */}
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-6 sm:mb-8 leading-tight">
+          <span className="text-navy block sm:inline">Join Our Newsletter for</span>{" "}
+          <span className="text-orange-500 italic block sm:inline">
             Exclusive Insights & Business Updates!
           </span>
         </h2>
 
-        {/* Newsletter Form */}
+        {/* Newsletter Form - Mobile optimized */}
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-xl mx-auto w-full"
         >
-          <div className="relative w-full sm:flex-1">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-navy rounded-full flex items-center justify-center">
-              <Mail className="w-5 h-5 text-white" />
+          <div className="relative w-full">
+            <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 bg-navy rounded-full flex items-center justify-center">
+              <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter Email Address"
+              placeholder={isMobile ? "Email address" : "Enter Email Address"}
               required
-              className="w-full pl-16 pr-4 py-4 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+              className="w-full pl-14 sm:pl-16 pr-4 py-3.5 sm:py-16 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-sm sm:text-base"
+              aria-label="Email address for newsletter"
             />
           </div>
           <button
             type="submit"
-            className="w-full sm:w-auto px-8 py-4 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30 text-sm sm:text-base"
           >
             Subscribe
           </button>
         </form>
+
+        {/* Privacy note - Mobile only */}
+        {isMobile && (
+          <p className="text-xs text-navy/50 mt-4">
+            No spam, unsubscribe anytime.
+          </p>
+        )}
+
+        {/* Success message placeholder (can be enhanced) */}
+        <p className="text-xs text-navy/40 mt-4 sm:mt-6">
+          Get the latest insights delivered to your inbox
+        </p>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Building2, LineChart, Lightbulb } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const services = [
   {
@@ -28,89 +29,117 @@ const services = [
 ];
 
 export default function Services() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+    
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
   return (
-    <section className="relative bg-gray-light py-20 lg:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+    <section className="relative bg-gray-light py-16 sm:py-16 lg:py-28 overflow-hidden">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header - Responsive */}
+        <div className="text-left max-w-2xl mx-auto mb-12 sm:mb-14 lg:mb-16">
           {/* Section Label */}
-          <div className="flex items-center justify-center gap-3 text-navy/70 text-sm font-medium tracking-wide mb-4">
-            <span className="w-8 h-0.5 bg-orange-500" />
+          <div className="flex items-center justify-start gap-2 sm:gap-3 text-navy/70 text-xs sm:text-sm font-medium tracking-wide mb-3 sm:mb-4">
+            <span className="w-6 sm:w-8 h-0.5 bg-orange-500" />
             Our Services
-            <span className="w-8 h-0.5 bg-orange-500" />
+            {/* <span className="w-6 sm:w-8 h-0.5 bg-orange-500" /> */}
           </div>
 
-          {/* Heading */}
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
-            <span className="text-navy">Services That Fit</span>
-            <br />
-            <span className="text-orange-500 italic">Your Needs</span>
+          {/* Heading - Responsive typography */}
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
+            <span className="text-navy block sm:inline">Services That Fit</span>
+            <span className="text-orange-500 italic block sm:inline sm:ml-2">
+              Your Needs
+            </span>
           </h2>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Services Grid - Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="relative bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 group"
+              className="relative bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 group h-full flex flex-col"
             >
-              {/* Image */}
-              <div className="relative h-52 overflow-hidden">
+              {/* Image Container - Responsive height */}
+              <div className="relative h-48 sm:h-52 overflow-hidden flex-shrink-0">
                 <img
                   src={service.image}
                   alt={service.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading={index > 0 ? "lazy" : "eager"}
                 />
-                {/* Icon Badge */}
-                <div className="absolute bottom-10 left-6 translate-y-1/2 w-16 h-16 bg-navy rounded-full flex items-center justify-center text-white shadow-xl">
-                  <service.icon className="w-7 h-7" />
+                
+                {/* Icon Badge - Responsive sizing and positioning */}
+                <div className="absolute bottom-8 sm:bottom-10 left-4 sm:left-6 translate-y-1/2 w-14 h-14 sm:w-16 sm:h-16 bg-navy rounded-full flex items-center justify-center text-white shadow-xl">
+                  <service.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="p-6 pt-12">
-                <h3 className="text-xl font-bold text-navy mb-3">
+              {/* Content - Responsive padding */}
+              <div className="p-5 sm:p-6 pt-10 sm:pt-12 flex-grow flex flex-col">
+                <h3 className="text-lg sm:text-xl font-bold text-navy mb-2 sm:mb-3 leading-tight">
                   {service.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3 sm:line-clamp-3 flex-grow">
                   {service.description}
                 </p>
+                
+                {/* Learn More Link - Responsive touch target */}
                 <Link
                   href={`/services#${service.title.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="inline-flex items-center gap-2 text-orange-500 font-semibold hover:gap-3 transition-all"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 text-orange-500 font-semibold hover:gap-3 transition-all py-2 text-sm sm:text-base mt-auto"
                 >
                   Learn more
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Link>
               </div>
 
-              {/* Bottom Border Accent */}
+              {/* Bottom Border Accent - Preserved */}
               <div
-                className={`h-1 absolute bottom-0 w-full ${index === 0 ? "bg-transparent group-hover:bg-orange-500" : "bg-transparent group-hover:bg-orange-500"} transition-colors`}
+                className={`h-1 absolute bottom-0 w-full ${
+                  index === 0 
+                    ? "bg-transparent group-hover:bg-orange-500" 
+                    : "bg-transparent group-hover:bg-orange-500"
+                } transition-colors`}
               />
             </div>
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <div className="inline-flex items-center gap-4">
+        {/* View All Button - Responsive */}
+        <div className="text-center mt-10 sm:mt-12">
+          <div className="inline-flex flex-row sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <Link
               href="/services"
-              className="inline-flex items-center justify-center px-8 py-4 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition-colors"
+              className="flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition-colors text-sm sm:text-base"
             >
               View All Services
             </Link>
             <Link
               href="/services"
-              className="w-12 h-12 bg-navy rounded-full flex items-center justify-center text-white hover:bg-navy-light transition-colors"
+              className="w-10 h-10 sm:w-12 sm:h-12 bg-navy rounded-full flex items-center justify-center text-white hover:bg-navy-light transition-colors"
+              aria-label="View all services"
             >
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
           </div>
         </div>
       </div>
+
+      {/* Mobile Decorative Elements - Subtle, preserves theme */}
+      <div className="sm:hidden absolute left-0 top-1/3 w-24 h-24 bg-orange-500/5 rounded-full blur-2xl -z-10" />
+      <div className="sm:hidden absolute right-0 bottom-1/4 w-32 h-32 bg-navy/5 rounded-full blur-2xl -z-10" />
     </section>
   );
 }
