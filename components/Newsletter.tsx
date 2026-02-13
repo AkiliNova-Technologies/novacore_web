@@ -158,7 +158,7 @@ export default function Newsletter() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={isMobile ? "Email address" : "Enter Email Address"}
               required
-              className="w-full pl-14 sm:pl-16 pr-4 py-3.5 sm:py-16 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-sm sm:text-base"
+              className="w-full pl-14 sm:pl-16 pr-4 py-3.5 sm:py-4 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-sm sm:text-base"
               aria-label="Email address for newsletter"
             />
           </div>
